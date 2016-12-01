@@ -1,38 +1,29 @@
-const _ = require('ramda');
+const curry = require('ramda').curry;
 const log = console.log.bind(console);
 
 const spaces = /\s+/g;
 const vowels = /[aeiouy]/ig;
 
-var match = function(what, where) {
-    return where.match(what) !== null
-}
+var match = (what, where) => where.match(what) !== null;
 
-console.log("match(spaceRegExp, 'hello world') => ", match(spaces, "hello world")); // true
+console.log( match(spaces, "hello world")); // true
+console.log( match(vowels, "fck")); // false
 
-// curry (example one)
-match = function(what) {
-    return function(where) {
-        return where.match(what) !== null;
-    }
-}
+// hasVowels, hasSpaces ???
 
-// partially applied match...
-const hasSpaces = match(spaces); // hasSpaces is Function
-console.log("hasSpaces('nospaces') => ", hasSpaces("nospaces")); // false
-console.log("hasSpaces('hello wordl') => ", hasSpaces("hello wordl")); // true
+match = what => where => where.match(what) !== null;
 
+var hasVowels = match(vowels);
+console.log( hasVowels("hello world")); // true
+console.log( hasVowels("fck")); // true
 
-const hasVowels = match(vowels);
-console.log('hasVowels("dog") => ', hasVowels("dog")); // true
-console.log('hasVowels("fck") => ', hasVowels("fck")); // false
+// better way
 
-// curry (better example, using ramda/lodash curry)
-match  = _.curry((what,where) => where.match(what, where) !== null);
+const matchCurried = curry( (what, where) => where.match(what) !== null);
 
-console.log('match("hello")("hello world") => ', match("hello")("hello world")); // true
-console.log('match("hello", "hello world") => ', match("hello", "hello world")); // true
+// both are the same
+matchCurried(vowels, "hello");
+matchCurried(vowels)("hello");
 
-const isWelcome = match("hello");
+var hasVowels = matchCurried(vowels);
 
-console.log("isWelcome('hello world') =>", isWelcome("hello world")); // true
