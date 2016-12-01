@@ -15,7 +15,7 @@ match = what => where => where.match(what) !== null;
 
 var hasVowels = match(vowels);
 console.log( hasVowels("hello world")); // true
-console.log( hasVowels("fck")); // true
+console.log( hasVowels("fck")); // false
 
 // better way
 
