@@ -4,63 +4,58 @@ const _ = require('ramda');
 const compose = _.compose,
       sum = _.sum,
       map = _.map,
-      groupBy = _.groupBy;
-const log = console.log.bind(console);
+      groupBy = _.groupBy,
+      mean = _.mean,
+      applySpec = _.applySpec,
+      values = _.values;
 
 const generateChart = require('./chart');
 
 const ccy = transaction => transaction.ccy;
 const ric = transaction => transaction.ric;
+
 const shares = transaction => transaction.shares;
 const value = transaction => transaction.value;
 
-const valueInUSD = transaction => transaction.value * transaction.fx;
-const shareValue = transaction => transaction.value / transaction.shares;
-
-
-console.log( _.map(_.map(shareValue), _.groupBy(ccy, data)));
-
 
 // [Transaction] -> {String:[Transaction]}
-const groupTransactionsBy = property => groupBy(property);
+const groupTransactionsBy = _.groupBy;
 
 // [Transaction] -> Number
 const calculateTotalOf = of => compose( sum, map(of) );
 
+// {String:[Transactions] -> {String:Number}
+const calculateTotalsOf = of => map(calculateTotalOf(of))
 
-const totalSharesByRic = _.compose(
-    _.map(calculateTotalOf(shares)),
-    groupTransactionsBy(ric)
-)
-
-const totalValueByCCY = _.compose(
-  _.map(calculateTotalOf(value)),
-  groupTransactionsBy(ccy)
-)
-
-const avg = of => _.compose( _.mean, _.map(of));
 
 // build filter data
 
-const buildChartData = _.applySpec(
+const buildChartData = applySpec(
 {
   ['total shares']: calculateTotalOf(shares),
-  ['total value']: calculateTotalOf(value),
-  ['total value in USD']: calculateTotalOf(valueInUSD),
-  ['avg value']: avg(valueInUSD),
-  ['avg share value']: avg(shareValue)
+  ['total value']: calculateTotalOf(value)
 }
 )
 
+const createBreakdownBy = by => compose( map(buildChartData), groupTransactionsBy(by));
 
-const ccyBreakdown = compose( map(buildChartData), groupTransactionsBy(ccy));
-const ricBreakdown = compose( map(buildChartData), groupTransactionsBy(ric));
+const ccyBreakdown = createBreakdownBy(ccy);
+const ricBreakdown = createBreakdownBy(ric);
 
 
-generateChart(ccyBreakdown(data));
+generateChart(ccyBreakdown(data), "#chart1");
 generateChart(ricBreakdown(data), '#chart2');
 
-console.log(ccyBreakdown(data));
 
+//console.log( calculateTotalOf(shares)(data));
+//console.log( compose( calculateTotalsOf(shares), groupTransactionsBy(ccy))(data) );
+//console.log( compose( calculateTotalsOf(shares), groupTransactionsBy(ric))(data) );
+//console.log( compose( calculateTotalsOf(value), groupTransactionsBy(ccy))(data) );
+//console.log( compose( calculateTotalsOf(value), groupTransactionsBy(ric))(data) );
+
+
+// const transBy = by =>  groupTransactionsBy(by);
+// const transShareCost = by => compose( map( map(costByShare) ), transBy(by) );
+// const meanTransShareCost = by => compose( map( mean), transShareCost(by) );
 
 
