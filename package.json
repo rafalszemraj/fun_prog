@@ -5,13 +5,14 @@
   "main": "curry_func.js",
   "scripts": {
     "exercise_data": "node transactions_generator",
-    "exercise": "webpack transactions.js dist/exercise.js -w"
+    "exercise": "webpack transactions.js dist/transactions.js -w"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "c3": "^0.4.11",
+    "lodash": "^4.17.2",
     "numeral": "^1.5.6",
     "ramda": "^0.22.1"
   },

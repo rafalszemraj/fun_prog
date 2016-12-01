@@ -2,28 +2,19 @@ const curry = require('ramda').curry;
 const log = console.log.bind(console);
 
 const spaces = /\s+/g;
-const vowels = /[aeiouy]/ig;
 
 var match = (what, where) => where.match(what) !== null;
 
-console.log( match(spaces, "hello world")); // true
-console.log( match(vowels, "fck")); // false
+match(spaces, "hello world"); // true
 
-// hasVowels, hasSpaces ???
-
-match = what => where => where.match(what) !== null;
-
-var hasVowels = match(vowels);
-console.log( hasVowels("hello world")); // true
-console.log( hasVowels("fck")); // false
-
-// better way
+// let's curry it!!
 
 const matchCurried = curry( (what, where) => where.match(what) !== null);
 
 // both are the same
-matchCurried(vowels, "hello");
-matchCurried(vowels)("hello");
+matchCurried(spaces, "hello"); // still works old way!
+matchCurried(spaces)("hello"); // work as curried as well!
 
-var hasVowels = matchCurried(vowels);
+const hasSpaces = matchCurried(spaces);
+hasSpaces("helloWorld"); // false
 
