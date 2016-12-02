@@ -27,6 +27,7 @@ const transactionListStats = applySpec(
 }
 )
 
+// [Transaction] -> [by:[transform(Transaction)]
 const createBreakdownBy = curry((by, transform) => compose( map(transform), groupTransactionsBy(prop(by))));
 
 const ccyBreakdown = createBreakdownBy('ccy');
