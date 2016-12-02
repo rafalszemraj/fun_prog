@@ -1,7 +1,7 @@
 
 
 // data
-const items = [1,2,3];
+var items = [1,2,3];
 
 
 // impure
@@ -31,6 +31,8 @@ function doSomeWork(items) {
 
 doSomeWork(items); // { incs: [???], doubles: [???] }
 
+// data
+var items = [1,2,3];
 
 // pure
 inc     = x => x + 1;
