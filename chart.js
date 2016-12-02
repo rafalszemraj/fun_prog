@@ -5,7 +5,7 @@ const numeral = require('numeral');
 
 const dataFormatter = value => numeral(value).format( value % 1 ? '0.00' : '0,0')
 
-module.exports = (chartData, container = "#chart") => {
+module.exports = _.curry((container, chartData) => {
 
   const keys = _.keys(_.mergeAll(_.values(chartData)));
   const values = _.map(_.values, _.values(chartData));
@@ -40,4 +40,4 @@ module.exports = (chartData, container = "#chart") => {
         }
       }
     })
-}
+});
