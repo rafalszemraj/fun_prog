@@ -2,17 +2,17 @@ const _ = require('ramda');
 const c3 = require('c3');
 const numeral = require('numeral');
 
-
+var chartIndex = 1;
 const dataFormatter = value => numeral(value).format( value % 1 ? '0.00' : '0,0')
 
-module.exports = _.curry((container, chartData) => {
+module.exports = _.curry((chartData) => {
 
   const keys = _.keys(_.mergeAll(_.values(chartData)));
   const values = _.map(_.values, _.values(chartData));
 
   c3.generate(
     {
-      bindto: container,
+      bindto: '#chart'+(chartIndex++),
       size: {
         height: 700
       },
