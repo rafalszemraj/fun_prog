@@ -27,7 +27,7 @@ const transactionListStats = applySpec(
 }
 )
 
-// [Transaction] -> [by:[transform(Transaction)]
+// [Transaction] -> {by:[transform(Transaction)}
 const createBreakdownBy = curry((by, transform) => compose( map(transform), groupTransactionsBy(prop(by))));
 
 const ccyBreakdown = createBreakdownBy('ccy');
@@ -41,6 +41,7 @@ createChartForBreakdown('#chart2', ricBreakdown)(data);
 //
 // console.log( ccyBreakdown(length)(data));
 // console.log( ccyBreakdown(avgOf('shares'))(data));
+// console.log( ccyBreakdown(avgOf('value'))(data));
 //
 // console.log( ricBreakdown(length)(data));
 // console.log( ricBreakdown(avgOf('shares'))(data));
